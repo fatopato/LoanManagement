@@ -7,7 +7,7 @@ A Spring Boot application for managing loans and customer credit. This applicati
 - Customer management with credit limits
 - Loan creation and management
 - Installment tracking
-- Role-based access control (ADMIN, USER, and CUSTOMER roles)
+- Role-based access control (ADMIN and CUSTOMER roles)
 - JWT Authentication
 - H2 Database for data storage
 - User management with email verification
@@ -23,7 +23,7 @@ A Spring Boot application for managing loans and customer credit. This applicati
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/loaner.git
+   git clone https://github.com/fatopato/LoanManagement.git
    cd loaner
    ```
 
@@ -43,17 +43,6 @@ A Spring Boot application for managing loans and customer credit. This applicati
    ```bash
    ./mvnw spring-boot:run
    ```
-
-2. Access the H2 Console:
-   - Open your browser and navigate to:
-     ```
-     http://localhost:9092/h2-console
-     ```
-
-3. Use the following database configuration:
-   - JDBC URL: `jdbc:h2:mem:loanerdb`
-   - Username: `sa`
-   - Password: `password`
 
 ## API Documentation
 
