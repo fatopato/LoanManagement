@@ -4,11 +4,11 @@ import com.fatihkoprucu.loaner.dto.GetLoanRequest;
 import com.fatihkoprucu.loaner.dto.LoanRequest;
 import com.fatihkoprucu.loaner.dto.LoanResponse;
 import com.fatihkoprucu.loaner.dto.PaymentResponse;
-import com.fatihkoprucu.loaner.entity.Customer;
+import com.fatihkoprucu.loaner.entity.User;
 import com.fatihkoprucu.loaner.entity.Loan;
 import com.fatihkoprucu.loaner.entity.LoanInstallment;
 import com.fatihkoprucu.loaner.exception.LoanValidationException;
-import com.fatihkoprucu.loaner.repository.CustomerRepository;
+import com.fatihkoprucu.loaner.repository.UserRepository;
 import com.fatihkoprucu.loaner.repository.LoanInstallmentRepository;
 import com.fatihkoprucu.loaner.repository.LoanRepository;
 import com.fatihkoprucu.loaner.validator.LoanRequestValidator;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 class LoanServiceImplTest {
 
     @Mock
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
     @Mock
     private LoanRepository loanRepository;
     @Mock
@@ -47,14 +47,14 @@ class LoanServiceImplTest {
     @InjectMocks
     private LoanServiceImpl loanService;
 
-    private Customer customer;
+    private User customer;
     private Loan loan;
     private LoanRequest loanRequest;
     private List<LoanInstallment> installments;
 
     @BeforeEach
     void setUp() {
-        customer = new Customer();
+        customer = new User();
         customer.setId(1L);
         customer.setName("John");
         customer.setSurname("Doe");
@@ -63,7 +63,7 @@ class LoanServiceImplTest {
 
         loan = new Loan();
         loan.setId(1L);
-        loan.setCustomer(customer);
+        loan.setUser(customer);
         loan.setLoanAmount(BigDecimal.valueOf(1000));
         loan.setNumberOfInstallments(12);
         loan.setCreateDate(LocalDate.now());
@@ -111,8 +111,8 @@ class LoanServiceImplTest {
     @Test
     void getLoans_Success() {
         GetLoanRequest request = new GetLoanRequest(1L, false, 12);
-        when(customerRepository.existsById(1L)).thenReturn(true);
-        when(loanRepository.findByCustomerId(1L)).thenReturn(List.of(loan));
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(loanRepository.findByUserId(1L)).thenReturn(List.of(loan));
         when(loanInstallmentRepository.findByLoanIdOrderByDueDateAsc(1L))
             .thenReturn(installments);
 
@@ -122,8 +122,8 @@ class LoanServiceImplTest {
         assertEquals(1, response.size());
         assertEquals(loan.getId(), response.get(0).getId());
         
-        verify(customerRepository).existsById(1L);
-        verify(loanRepository).findByCustomerId(1L);
+        verify(userRepository).existsById(1L);
+        verify(loanRepository).findByUserId(1L);
     }
 
     @Test
@@ -171,7 +171,7 @@ class LoanServiceImplTest {
     @Test
     void getLoans_CustomerNotFound() {
         GetLoanRequest request = new GetLoanRequest(1L, null, null);
-        when(customerRepository.existsById(1L)).thenReturn(false);
+        when(userRepository.existsById(1L)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () ->
             loanService.getLoans(request)
